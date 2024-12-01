@@ -24,9 +24,9 @@ class PhoneHome extends StatelessWidget {
           codeAutoRetrievalTimeout: (vid) {},
         );
       } on FirebaseAuthException catch (e) {
-        Get.snackbar('Error occured', e.code);
+        Get.snackbar('Error occurred', e.code);
       } catch (e) {
-        Get.snackbar('Error Occured', e.toString());
+        Get.snackbar('Error Occurred', e.toString());
       }
     }
 
@@ -41,12 +41,12 @@ class PhoneHome extends StatelessWidget {
               const Center(
                 child: Text(
                   "Login with Mobile",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 15),
-                child: const Text('We will send you an OTP on this number.'),
+                child: const Text('We will send you an OTP on this number.', style: TextStyle(color: Colors.white),),
               ),
               const SizedBox(height: 20),
               phonetext(phonenumber),
@@ -83,6 +83,9 @@ class PhoneHome extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: TextField(
+          style: TextStyle(
+            color: Colors.white, // Text input color
+          ),
         controller: phonenumber,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(

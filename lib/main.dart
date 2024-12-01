@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app_3/screens/homeScreen.dart';
 import 'package:movie_app_3/screens/wrapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

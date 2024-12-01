@@ -28,14 +28,14 @@ class moviesOverview extends StatelessWidget {
                   },
                   icon: const Icon(Icons.arrow_back_sharp)),
             ),
-            backgroundColor: const Color.fromARGB(255, 3, 60, 43),
+            backgroundColor: Color(0xffbfbbbb),
             floating: true,
             expandedHeight: 400,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 movie.title,
-                style: GoogleFonts.tinos(fontSize: 18, fontWeight: FontWeight.w600),
+                style: GoogleFonts.tinos(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
               ),
               background: Image.network(
                 '${Constants.imagePath}${movie.posterPath}',
@@ -65,7 +65,7 @@ class moviesOverview extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white),
+                                border: Border.all(color: Colors.black),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(
@@ -85,7 +85,7 @@ class moviesOverview extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.white),
+                                  border: Border.all(color: Colors.black),
                                   borderRadius: BorderRadius.circular(10)
                               ),
                               child: Row(children: [
