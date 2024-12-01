@@ -2,27 +2,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app_3/screens/homeScreen.dart';
 import 'package:movie_app_3/screens/login.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Wrapper extends StatefulWidget {
+class Wrapper extends StatelessWidget {
   const Wrapper({super.key});
 
   @override
-  State<Wrapper> createState() => _WrapperState();
-}
-
-class _WrapperState extends State<Wrapper> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasData) {
-              return homeScreen();
+              return const homeScreen();
             } else {
-              return PhoneHome();
+              return const PhoneHome();
             }
-          }),
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }

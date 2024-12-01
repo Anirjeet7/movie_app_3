@@ -35,8 +35,7 @@ class moviesOverview extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 movie.title,
-                style: GoogleFonts.tinos(
-                    fontSize: 18, fontWeight: FontWeight.w600),
+                style: GoogleFonts.tinos(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               background: Image.network(
                 '${Constants.imagePath}${movie.posterPath}',
@@ -105,7 +104,7 @@ class moviesOverview extends StatelessWidget {
                         ),
                       )
                     ],
-                  )))
+                  ))),
         ],
       ),
     );
