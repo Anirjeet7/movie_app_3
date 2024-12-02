@@ -1,48 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:movie_app_3/models/cardSlider.dart';
 import 'package:movie_app_3/models/movieSlider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movie_app_3/apikeys/apikey.dart';
-import 'package:movie_app_3/mods/moviedetails.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class homeScreen extends StatefulWidget {
+class homeScreen extends ConsumerWidget {
   const homeScreen({super.key});
-  @override
-  State<homeScreen> createState() => _homeScreenState();
-}
-
-class _homeScreenState extends State<homeScreen> {
-  final user = FirebaseAuth.instance.currentUser;
-
-  signout() async {
-    await FirebaseAuth.instance.signOut();
-  }
-
-  late Future<List<Movie>> nowPlaying;
-  late Future<List<Movie>> popular;
-  late Future<List<Movie>> topRated;
-  late Future<List<Movie>> upcoming;
 
   @override
-  void initState() {
-    super.initState();
-    nowPlaying = Api().getnowPlaying();
-    popular = Api().getPopular();
-    topRated = Api().getTopRated();
-    upcoming = Api().getUpcoming();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nowPlaying = ref.watch(nowPlayingProvider);
+    final popular = ref.watch(popularProvider);
+    final topRated = ref.watch(topRatedProvider);
+    final upcoming = ref.watch(upcomingProvider);
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(172, 43, 43, 43),
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
           'Movie App',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
         centerTitle: true,
       ),
@@ -53,119 +33,80 @@ class _homeScreenState extends State<homeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Now Playing Section
               Text(
                 'Now Playing',
                 style: GoogleFonts.alkatra(
-                    fontSize: 30, fontWeight: FontWeight.w500, color: Colors.white),
+                    fontSize: 30, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 16),
               SizedBox(
-                child: FutureBuilder(
-                    future: nowPlaying,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(snapshot.toString()),
-                        );
-                      } else if (snapshot.hasData) {
-                        return CardSlider(
-                          snapshot: snapshot,
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
+                child: nowPlaying.when(
+                  data: (movies) => CardSlider(movies: movies),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (err, stack) => Center(
+                    child: Text(err.toString()),
+                  ),
+                ),
               ),
-
               const SizedBox(height: 16),
-              // Popular Movies Section
               Text(
                 'Popular Movies',
-                style: GoogleFonts.alkatra(fontSize: 30, color: Colors.white),
+                style: GoogleFonts.alkatra(fontSize: 30),
               ),
               const SizedBox(height: 16),
               SizedBox(
-                child: FutureBuilder(
-                    future: popular,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(snapshot.toString()),
-                        );
-                      } else if (snapshot.hasData) {
-                        return MoviesSlider(
-                          snapshot: snapshot,
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
+                child: popular.when(
+                  data: (movies) => MoviesSlider(movies: movies),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (err, stack) => Center(
+                    child: Text(err.toString()),
+                  ),
+                ),
               ),
-
               const SizedBox(height: 16),
-              // Top Rated Movies Section
               Text(
                 'Top Rated',
-                style: GoogleFonts.alkatra(fontSize: 30, color: Colors.white),
+                style: GoogleFonts.alkatra(fontSize: 30),
               ),
               const SizedBox(height: 16),
               SizedBox(
-                child: FutureBuilder(
-                    future: topRated,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(snapshot.toString()),
-                        );
-                      } else if (snapshot.hasData) {
-                        return MoviesSlider(
-                          snapshot: snapshot,
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
+                child: topRated.when(
+                  data: (movies) => MoviesSlider(movies: movies),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (err, stack) => Center(
+                    child: Text(err.toString()),
+                  ),
+                ),
               ),
-
               const SizedBox(height: 16),
-              // Upcoming Movies Section
               Text(
-                'Upcoming Movies',
-                style: GoogleFonts.alkatra(fontSize: 30, color: Colors.white),
+                'Upcoming movies',
+                style: GoogleFonts.alkatra(fontSize: 30),
               ),
               const SizedBox(height: 16),
               SizedBox(
-                child: FutureBuilder(
-                    future: upcoming,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(snapshot.toString()),
-                        );
-                      } else if (snapshot.hasData) {
-                        return MoviesSlider(
-                          snapshot: snapshot,
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }),
+                child: upcoming.when(
+                  data: (movies) => MoviesSlider(movies: movies),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (err, stack) => Center(
+                    child: Text(err.toString()),
+                  ),
+                ),
               ),
-
-              SizedBox(height: 20),
-              // Sign out Button
+              const SizedBox(height: 20),
               Center(
                 child: FloatingActionButton(
-                  onPressed: () => signout(),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                  },
                   child: const Icon(Icons.login_rounded),
                 ),
               ),

@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:movie_app_3/constants.dart';
 import 'package:movie_app_3/mods/moviedetails.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Api {
   static const nowPlayingUrl =
@@ -14,46 +14,49 @@ class Api {
   static const upcomingUrl =
       'https://api.themoviedb.org/3/movie/upcoming?api_key=${Constants.apikey}';
 
-
-
   Future<List<Movie>> getnowPlaying() async {
     final response = await http.get(Uri.parse(nowPlayingUrl));
     if (response.statusCode == 200) {
       final decodedData = json.decode(response.body)['results'] as List;
-      // print(decodedData);
       return decodedData.map((movie) => Movie.fromJson(movie)).toList();
     } else {
       throw Exception('Some Error we might fix later.');
     }
   }
+
   Future<List<Movie>> getPopular() async {
     final response = await http.get(Uri.parse(popularUrl));
     if (response.statusCode == 200) {
       final decodedData = json.decode(response.body)['results'] as List;
-      // print(decodedData);
       return decodedData.map((movie) => Movie.fromJson(movie)).toList();
     } else {
       throw Exception('Some Error we might fix later.');
     }
   }
+
   Future<List<Movie>> getTopRated() async {
     final response = await http.get(Uri.parse(topRatedUrl));
     if (response.statusCode == 200) {
       final decodedData = json.decode(response.body)['results'] as List;
-      // print(decodedData);
       return decodedData.map((movie) => Movie.fromJson(movie)).toList();
     } else {
       throw Exception('Some Error we might fix later.');
     }
   }
+
   Future<List<Movie>> getUpcoming() async {
     final response = await http.get(Uri.parse(upcomingUrl));
     if (response.statusCode == 200) {
       final decodedData = json.decode(response.body)['results'] as List;
-      // print(decodedData);
       return decodedData.map((movie) => Movie.fromJson(movie)).toList();
     } else {
       throw Exception('Some Error we might fix later.');
     }
   }
 }
+
+final apiProvider = Provider((ref) => Api());
+final nowPlayingProvider = FutureProvider((ref) => ref.watch(apiProvider).getnowPlaying());
+final popularProvider = FutureProvider((ref) => ref.watch(apiProvider).getPopular());
+final topRatedProvider = FutureProvider((ref) => ref.watch(apiProvider).getTopRated());
+final upcomingProvider = FutureProvider((ref) => ref.watch(apiProvider).getUpcoming());

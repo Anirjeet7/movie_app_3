@@ -4,26 +4,27 @@ import 'package:movie_app_3/screens/homeScreen.dart';
 import 'package:movie_app_3/screens/login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Wrapper extends StatelessWidget {
+class Wrapper extends ConsumerWidget {
   const Wrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authStateProvider);
+
     return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              return const homeScreen();
-            } else {
-              return const PhoneHome();
-            }
+      body: user.when(
+        data: (user) {
+          if (user != null) {
+            return const homeScreen();
           } else {
-            return const Center(child: CircularProgressIndicator());
+            return const PhoneHome();
           }
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text(err.toString())),
       ),
     );
   }
 }
+
+final authStateProvider = StreamProvider((ref) => FirebaseAuth.instance.authStateChanges());

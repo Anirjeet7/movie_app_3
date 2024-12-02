@@ -23,8 +23,11 @@ class _OtpPageState extends State<OtpPage> {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      Get.offAll(() => const Wrapper());
+      await FirebaseAuth.instance
+          .signInWithCredential(credential)
+          .then((value) {
+        Get.offAll(Wrapper());
+      });
     } on FirebaseAuthException catch (e) {
       Get.snackbar('Error Occured', e.code);
     } catch (e) {
@@ -43,7 +46,7 @@ class _OtpPageState extends State<OtpPage> {
             shrinkWrap: true,
             children: [
               Image.asset('assets/images/otp.png', height: 100, width: 100),
-              const Center(
+              Center(
                 child: Text(
                   'OTP Verification',
                   style: TextStyle(fontSize: 30),
@@ -51,7 +54,10 @@ class _OtpPageState extends State<OtpPage> {
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 6),
-                child: Text("Enter OTP sent to +91 ", textAlign: TextAlign.center),
+                child: Text(
+                  "Enter OTP sent to +91 ",
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(height: 20),
               textcode(),
@@ -67,14 +73,20 @@ class _OtpPageState extends State<OtpPage> {
   Widget button() {
     return Center(
       child: ElevatedButton(
-        onPressed: signIn,
+        onPressed: () {
+          signIn();
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blueAccent,
           padding: const EdgeInsets.all(16),
         ),
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 80),
-          child: Text('Verify OTP', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text('Verify OTP',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
         ),
       ),
     );
@@ -82,17 +94,15 @@ class _OtpPageState extends State<OtpPage> {
 
   Widget textcode() {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Pinput(
-          length: 6,
-          onChanged: (value) {
-            setState(() {
-              code = value;
-            });
-          },
-        ),
-      ),
-    );
+        child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Pinput(
+              length: 6,
+              onChanged: (value) {
+                setState(() {
+                  code = value;
+                });
+              },
+            )));
   }
 }
